@@ -1,0 +1,36 @@
+{
+  "name": "dsh-mobile-ui",
+  "description": "DSH Web GUI 移动端适配插件：单列布局 + 抽屉导航 + 输入框防溢出 + 统计胶囊 + 安全区适配",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "tests",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "mobile",
+    "responsive",
+    "cordis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudfly-xiao/dsh-mobile-ui.git"
+  },
+  "license": "MIT",
+  "dsh": {
+    "client": {
+      "platform": "web"
+    }
+  }
+}
