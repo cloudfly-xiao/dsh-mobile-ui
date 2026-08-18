@@ -78,7 +78,7 @@ function discoverDshPkgs() {
   const css = (body.match(/const MOBILE_CSS = `([\s\S]*?)`;/) || [])[1] || "";
   t("CSS extracted", css.length > 3000, "got " + css.length + " bytes");
   t("braces balanced", (css.match(/{/g) || []).length === (css.match(/}/g) || []).length);
-  t("5 media breakpoints present", (css.match(/@media/g) || []).length === 5);
+  t("4 media breakpoints present", (css.match(/@media/g) || []).length === 4);
   const stable = [
     ["frame single-track override", "#root div[style*='grid-template-columns']{grid-template-columns:minmax(0,1fr)!important}"],
     ["sidebar drawer follows shipped state", ":not([data-sidebar-collapsed])>*:has([data-slot='sidebar'])"],
@@ -90,6 +90,10 @@ function discoverDshPkgs() {
     ["inputs no-iOS-zoom", "#root input,#root textarea,#root select{font-size:16px}"],
   ];
   for (const [n, str] of stable) t("stable hook: " + n, css.includes(str));
+  t("dead pc_/upload selectors pruned", !css.includes(".pc_") && !css.includes(".dsh-upload"));
+  t("viewport keyboard patch present", body.includes("interactive-widget=resizes-content"));
+  t("details close mirrored + Esc", body.includes(".Y0dWHa_close") && body.includes('"Escape"'));
+  t("landscape safe-area left/right covered", css.includes("safe-area-inset-left") && css.includes("safe-area-inset-right"));
 
   console.log("\n# 4. rc6 hash liveness (against installed dsh bundles)");
   const pkgsDir = discoverDshPkgs();
@@ -98,10 +102,10 @@ function discoverDshPkgs() {
   } else {
     const bundles = fs.readdirSync(pkgsDir).filter(d => d.startsWith("dsh-client-ui-"))
       .map(d => { try { return fs.readFileSync(path.join(pkgsDir, d, "lib/client.js"), "utf8"); } catch (e) { return ""; } }).join("");
-    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_"];
+    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
     console.log("\n# 5. JS DOM hooks referenced by client.js");
-    for (const h of ["hHd-Xa_toggle", "o3BgMG_inspectButton"]) t("hook ." + h + " exists in build", bundles.includes(h));
+    for (const h of ["hHd-Xa_toggle", "o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
   }
   t("shell.overlay slot used", body.includes('"shell.overlay"'));
 

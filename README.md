@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![dsh 0.1.0-rc.6](https://img.shields.io/badge/dsh-0.1.0--rc.6-6c5ce7.svg)](#兼容性)
+[![version 1.1.0](https://img.shields.io/badge/version-1.1.0-blue)](./CHANGELOG.md)
 
 DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器打开页面即得原生 App
 般的单列对话体验，桌面端布局不受任何影响。零配置、零依赖、纯客户端注入。
@@ -51,9 +52,6 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
 - **各类标签着色** —— 工具标签、上下文注入标签等 6 处恢复语义配色
 - **弹层居中** —— 定时任务等 flyout 菜单在窄屏居中弹出
 
-### 中文化
-- **插件控制台** —— 常用插件行内显示一句中文介绍，一眼看懂装了什么
-
 ## 安装
 
 **方式一 · 插件控制台（推荐）**：在 DSH Web 的插件控制台中按 GitHub 源安装本仓库。
@@ -85,7 +83,7 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 ```
 lib/index.js    host 半边（空实现，仅占位——本插件纯客户端）
 lib/client.js   client 半边（ModuleLoader 自注册格式）
-                ├─ styles: MOBILE_CSS（全部适配样式，5 组媒体查询断点）
+                ├─ styles: MOBILE_CSS（全部适配样式，4 组媒体查询断点）
                 ├─ shell.overlay 槽位: ☰/详情 FAB + 遮罩
                 └─ document click 监听: 点工具"检查"→开详情抽屉
 ```
@@ -97,6 +95,19 @@ lib/client.js   client 半边（ModuleLoader 自注册格式）
 | **稳定钩子** | `data-sidebar-collapsed`、`data-slot='sidebar'`、`env(safe-area-inset-*)` | 一般继续生效 |
 | **构建 hash 类名** | `.uV2eYG_*`、`.FJxK0a_*` 等（跟随构建产物） | 可能失效，需刷新 |
 
+### 断点分层（本插件 vs 官方内置响应式）
+
+| 层 | 断点 | 内容 |
+|---|---|---|
+| 本插件 | ≤820px | 单列布局、抽屉导航、details 抽屉、composer 收纳、统计胶囊、安全区 |
+| 官方 trajectory | ≤760px | 轨迹 details 面板变右侧浮层 |
+| 官方 user-questions | ≤720px | 计划评审卡圆角/内边距 |
+| 官方 plugin-inventory | ≤680px | 设置页插件卡网格单列 |
+| 官方 settings-models / workflow-run | ≤560px | 弹窗内边距收紧 |
+
+官方查询均为组件级微调、无全局抽屉逻辑，与本插件不冲突；681–820px（平板竖屏）
+区间只有本插件生效。
+
 ## 兼容性与 hash 维护
 
 基于 dsh `0.1.0-rc.6` 构建。升级 dsh 后若手机上出现布局回退（输入框挤爆、
@@ -106,7 +117,17 @@ lib/client.js   client 半边（ModuleLoader 自注册格式）
 node tests/run-tests.cjs     # 第 4/5 节报告 hash 存活情况
 ```
 
-刷新方法：新 hash 藏在 `dsh-client-ui-*` 包的 `lib/client.js` 类名映射
+刷新方法（推荐 · 自动）：
+
+```sh
+node scripts/refresh-hashes.mjs            # 干跑：报告新旧前缀映射与存活状态
+node scripts/refresh-hashes.mjs --write    # 应用整前缀替换并校验新类名存在于构建产物
+```
+
+脚本从已安装的 `dsh-client-ui-*` 包读取类名映射（`{ "logical": "hash" }`）；
+仍存活的 token 不动，前缀已死且新值唯一的自动替换，多处候选的明确报告交人工定夺。
+
+刷新方法（手动兜底）：新 hash 藏在 `dsh-client-ui-*` 包的 `lib/client.js` 类名映射
 （`var X_default = { "logical": "hash" }`）里，找到逻辑名对应的新前缀，
 对 `lib/client.js` 中标注 `rc6` 的段落做**整前缀全局替换**
 （如 `uV2eYG_` → 新值），避免逐条手改遗漏。
@@ -120,7 +141,8 @@ node tests/run-tests.cjs
 #   DSH_BASE_URL   指向运行中的 dsh web（如 http://127.0.0.1:3080）启用运行时检查
 ```
 
-42 项静态检查：包形状、client bundle 可执行性、CSS 完整性、hash 存活性、DOM 钩子。
+49 项静态检查（DSH_BASE_URL 指向运行中的 dsh web 再加 3 项运行时检查）：包形状、
+client bundle 可执行性、CSS 完整性、hash 存活性、DOM 钩子、死选择器防回潮。
 
 ## 已知坑（给想写同类插件的人）
 
@@ -131,6 +153,9 @@ node tests/run-tests.cjs
    不是 ESM export；React 从 `require("react")` 取。
 3. **nth-of-type 只数标签不看 class**：统计行的组 span 与分隔 span 交替，
    组落在奇数位——CSS 按奇数位着色，别按"第 N 个组"数。
+4. **`:has()` 依赖**：抽屉/遮罩跟随官方状态的核心机制需要 Chrome 105+ /
+   Safari 15.4+（微信 XWeb 内核实测正常）；更老的内核上遮罩与 FAB 激活态会
+   失效，但单列布局、输入区收纳等大多数规则仍生效。
 
 ## License
 
