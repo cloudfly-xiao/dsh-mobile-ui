@@ -81,7 +81,8 @@ function discoverDshPkgs() {
   t("4 media breakpoints present", (css.match(/@media/g) || []).length === 4);
   const stable = [
     ["frame single-track override", "#root div[style*='grid-template-columns']{grid-template-columns:minmax(0,1fr)!important}"],
-    ["sidebar drawer follows shipped state", ":not([data-sidebar-collapsed])>*:has([data-slot='sidebar'])"],
+    ["drawer columns JS-tagged (no :has)", "#root div[style*='grid-template-columns']>[data-dshm-col='sidebar']"],
+    ["sidebar drawer follows shipped state", "body[data-mob-sidebar-open='1'] #root div[style*='grid-template-columns']>[data-dshm-col='sidebar']"],
     ["details drawer own state", "body[data-mob-panel='details']"],
     ["drag handles hidden", " [data-side]{display:none!important}"],
     ["composer bottom safe-area", ".wSkVaW_composerSeat{padding-bottom:env(safe-area-inset-bottom)"],
@@ -94,6 +95,16 @@ function discoverDshPkgs() {
   t("viewport keyboard patch present", body.includes("interactive-widget=resizes-content"));
   t("details close mirrored + Esc", body.includes(".Y0dWHa_close") && body.includes('"Escape"'));
   t("landscape safe-area left/right covered", css.includes("safe-area-inset-left") && css.includes("safe-area-inset-right"));
+  t("no :has() left in CSS (old WeChat XWeb kernels)", !css.includes(":has("));
+  t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
+  t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
+  t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
+  t("no permanent will-change", !css.includes("will-change"));
+  const mixLines = css.split("\n").filter((l) => l.includes("background:color-mix("));
+  t("color-mix backgrounds carry rgba fallback",
+    mixLines.length > 0 && mixLines.every((l) => l.includes("background:rgba(")),
+    mixLines.length + " color-mix lines, " + mixLines.filter((l) => !l.includes("background:rgba(")).length + " without fallback");
+  t("hash drift self-check present", body.includes("refresh-hashes.mjs") && body.includes("__dshMobileUi"));
 
   console.log("\n# 4. rc6 hash liveness (against installed dsh bundles)");
   const pkgsDir = discoverDshPkgs();
@@ -105,7 +116,7 @@ function discoverDshPkgs() {
     const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
     console.log("\n# 5. JS DOM hooks referenced by client.js");
-    for (const h of ["hHd-Xa_toggle", "o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
+    for (const h of ["o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
   }
   t("shell.overlay slot used", body.includes('"shell.overlay"'));
 
@@ -119,6 +130,9 @@ function discoverDshPkgs() {
     t("mobile-ui client.js served 200", cj.code === 200, "got " + cj.code);
     if (cj.code === 200) t("served bundle is our ModuleLoader code",
       cj.body.startsWith("window.__ModuleLoader__.load({") && cj.body.includes('"dsh-mobile-ui"'));
+    if (cj.code === 200) t("served bundle is current (v1.2 markers)",
+      cj.body.includes("data-dshm-col") && cj.body.includes("interactive-widget=resizes-content"),
+      "stale install in ~/.dsh/profiles/web — re-copy lib/ and restart");
   }
 
   console.log("\n========================================");

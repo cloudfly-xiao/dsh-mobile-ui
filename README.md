@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![dsh 0.1.0-rc.6](https://img.shields.io/badge/dsh-0.1.0--rc.6-6c5ce7.svg)](#兼容性)
-[![version 1.1.0](https://img.shields.io/badge/version-1.1.0-blue)](./CHANGELOG.md)
+[![version 1.2.0](https://img.shields.io/badge/version-1.2.0-blue)](./CHANGELOG.md)
 
 DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器打开页面即得原生 App
 般的单列对话体验，桌面端布局不受任何影响。零配置、零依赖、纯客户端注入。
@@ -37,13 +37,18 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
 - **单列布局** —— 桌面双栏（侧栏+主区）在窄屏压成单列，内容区占满全宽
 - **抽屉导航** —— ☰ 悬浮按钮唤出会话侧栏，跟随官方 `data-sidebar-collapsed`
   状态，不自建状态机，与桌面端行为一致
-- **工具详情抽屉** —— 点工具卡片"检查"按钮弹出底部详情抽屉（移动端无官方入口）
+- **工具详情抽屉** —— 点工具卡片"检查"按钮弹出底部详情抽屉（移动端无官方入口），
+  面板自身的关闭按钮与 Esc 键同步收起
+- **滚动锁定** —— 抽屉打开时背景页面不再跟着滚（`overflow:hidden` +
+  `overscroll-behavior:contain` 防滚动穿透）
 - **拖拽手柄隐藏** —— 触屏无处拖的分割条全部隐藏
 
 ### 输入区
 - **防溢出** —— composer 工具行/模型名自动换行收缩，不再一行挤爆
 - **禁 iOS 聚焦缩放** —— 输入控件统一 16px 字号
 - **底部安全区** —— `env(safe-area-inset-bottom)` 正确留白，不再被手势条遮挡
+- **键盘适配** —— viewport 追加 `interactive-widget=resizes-content`，Android 软键盘
+  弹出时视口收缩，composer 不被遮挡；横屏刘海侧安全区同样留白
 
 ### 观感
 - **统计胶囊** —— 底部 token/耗时统计按组着色、胶囊化排列，小屏不截断
@@ -84,8 +89,13 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 lib/index.js    host 半边（空实现，仅占位——本插件纯客户端）
 lib/client.js   client 半边（ModuleLoader 自注册格式）
                 ├─ styles: MOBILE_CSS（全部适配样式，4 组媒体查询断点）
+                ├─ 帧状态镜像: MutationObserver 给抽屉列打 [data-dshm-col] 标签，
+                │  官方 sidebar 状态单向同步到 body[data-mob-sidebar-open]，
+                │  抽屉打开时置 body[data-mob-lock]（CSS 零 :has() 依赖）
                 ├─ shell.overlay 槽位: ☰/详情 FAB + 遮罩
-                └─ document click 监听: 点工具"检查"→开详情抽屉
+                ├─ document click 监听: 点工具"检查"→开详情抽屉
+                └─ 3s 自检: rc6 锚点类全缺时 console.warn 提示跑 refresh-hashes
+                （状态查 window.__dshMobileUi）
 ```
 
 适配策略分两层，升级 dsh 时命运不同：
@@ -153,9 +163,11 @@ client bundle 可执行性、CSS 完整性、hash 存活性、DOM 钩子、死�
    不是 ESM export；React 从 `require("react")` 取。
 3. **nth-of-type 只数标签不看 class**：统计行的组 span 与分隔 span 交替，
    组落在奇数位——CSS 按奇数位着色，别按"第 N 个组"数。
-4. **`:has()` 依赖**：抽屉/遮罩跟随官方状态的核心机制需要 Chrome 105+ /
-   Safari 15.4+（微信 XWeb 内核实测正常）；更老的内核上遮罩与 FAB 激活态会
-   失效，但单列布局、输入区收纳等大多数规则仍生效。
+4. **别用 CSS `:has()` 跟随应用状态**：老微信 XWeb 内核（< Chrome 105）不支持，
+   且 `body:has(div[style*=...])` 让每次样式重算都全文档扫描。1.2.0 起改由
+   MutationObserver 单向镜像官方状态到 body 属性（派生展示位 ≠ 第二状态机，
+   不违反"单一状态源"红线）。`color-mix()` 同理：每条 color-mix 声明前都要有
+   rgba 兜底，旧内核整条丢弃声明时还有底色。
 
 ## License
 

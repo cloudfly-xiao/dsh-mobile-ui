@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.2.0
+
+兼容性与渲染成本专项：去掉 CSS `:has()` 依赖、补滚动锁定与降级兜底。
+
+### 变更
+- **去 `:has()`**：抽屉列改由 JS 打 `[data-dshm-col=sidebar|details]` 标签，官方 sidebar
+  状态经 MutationObserver 单向镜像到 `body[data-mob-sidebar-open]`。老微信 XWeb 内核
+  （< Chrome 105 / Safari 15.4）此前遮罩与 FAB 激活态直接失效；同时消除了
+  `body:has(div[style*=...])` 在每次样式重算上的全文档扫描开销。
+  观察器 rAF 合帧，且只响应帧属性翻转/结构变化——会话流式输出期间零额外扫描。
+- **滚动锁定**：任一抽屉打开时 `body[data-mob-lock]` 置 `overflow:hidden`，
+  抽屉容器加 `overscroll-behavior:contain`，修 iOS 橡皮筋穿透/背景跟滚。
+- **Esc 现在也能关侧栏抽屉**（此前只关 details）。
+
+### 清理与兜底
+- 删除两条被同特异性后声明整体遮蔽的死规则（FJxK0a_root 及其 span 的第一组
+  gap/padding/font-size）；合并分裂两处的 `._7KE1Ra_trigger` 声明；两个
+  `max-width:820px` 块合而为一。
+- 6 条标签配色规则移入 820 断点——此前落在所有媒体查询之外，桌面端也被改色，
+  与 README "桌面端不受任何影响"的承诺冲突。
+- 每条 `color-mix()` 背景前补 rgba 字面量兜底（旧内核整条丢弃声明时仍有底色）。
+- 移除常驻 `will-change:transform`（transform 过渡本身已触发合成层提升，常驻层白占
+  低端机内存）与过时的 `-webkit-overflow-scrolling:touch`（iOS 13+ 无效）。
+- 新增 `prefers-reduced-motion:reduce`：减弱动效用户关闭抽屉过渡动画。
+
+### 新增
+- **运行时 hash 自检**：加载 3 秒后探测 rc6 锚点类（composer 卡/会话头/统计行），
+  全部缺失即 `console.warn` 提示运行 `scripts/refresh-hashes.mjs`；诊断状态暴露于
+  `window.__dshMobileUi`。
+- 测试套件 +10 项守卫（无 :has 残留/滚动锁/overscroll/reduced-motion/rgba 兜底配对/
+  自检存在/线上副本新鲜度等），并移除早已不用的 `hHd-Xa_toggle` 陈旧钩子检查。
+
 ## 1.1.0
 
 收敛性维护版本：消除死代码、修复 details 抽屉失同步、补齐键盘体验与维护工具。
