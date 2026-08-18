@@ -89,6 +89,11 @@ function discoverDshPkgs() {
     ["sidebar content fills drawer", "[data-slot='sidebar']>*{width:100%!important;max-width:100%!important}"],
     ["jobs flyout centered on mobile", ".QsffPG_menu{left:50%!important"],
     ["inputs no-iOS-zoom", "#root input,#root textarea,#root select{font-size:16px}"],
+    ["market tabs scroll on phone", ".eGUBIq_tabs{overflow-x:auto!important"],
+    ["market search fills row", ".eGUBIq_tabSearch{width:100%!important}"],
+    ["market grids clamp 280px floor", ".eGUBIq_grid{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))!important"],
+    ["market installed rows wrap", ".eGUBIq_irow{flex-wrap:wrap!important"],
+    ["market modal near-full-bleed", "._dialog_15u5s_22{width:100%!important"],
   ];
   for (const [n, str] of stable) t("stable hook: " + n, css.includes(str));
   t("dead pc_/upload selectors pruned", !css.includes(".pc_") && !css.includes(".dsh-upload"));
@@ -118,6 +123,16 @@ function discoverDshPkgs() {
     console.log("\n# 5. JS DOM hooks referenced by client.js");
     for (const h of ["o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
   }
+
+  console.log("\n# 4b. community plugin css-scope liveness (web profile installs)");
+  const profileMarket = path.join(os.homedir(), ".dsh", "profiles", "web", "node_modules", "dshmarket", "client", "client.js");
+  if (fs.existsSync(profileMarket)) {
+    const mc = fs.readFileSync(profileMarket, "utf8");
+    t("dshmarket scope eGUBIq_* exists in installed bundle", mc.includes(".eGUBIq_root"),
+      "market upgraded? re-derive the css-module scope and refresh the rules");
+  } else {
+    s("dshmarket scope liveness", "dshmarket not installed in the web profile");
+  }
   t("shell.overlay slot used", body.includes('"shell.overlay"'));
 
   console.log("\n# 6. Runtime integration (live server)");
@@ -130,9 +145,11 @@ function discoverDshPkgs() {
     t("mobile-ui client.js served 200", cj.code === 200, "got " + cj.code);
     if (cj.code === 200) t("served bundle is our ModuleLoader code",
       cj.body.startsWith("window.__ModuleLoader__.load({") && cj.body.includes('"dsh-mobile-ui"'));
-    if (cj.code === 200) t("served bundle is current (v1.2 markers)",
-      cj.body.includes("data-dshm-col") && cj.body.includes("interactive-widget=resizes-content"),
+    if (cj.code === 200) t("served bundle is current (v1.3 markers)",
+      cj.body.includes("data-dshm-col") && cj.body.includes("interactive-widget=resizes-content") && cj.body.includes("eGUBIq_tabs"),
       "stale install in ~/.dsh/profiles/web — re-copy lib/ and restart");
+    const mk = await get(BASE + "/plugins/dshmarket/client.js");
+    t("dshmarket client.js served 200", mk.code === 200, "got " + mk.code);
   }
 
   console.log("\n========================================");

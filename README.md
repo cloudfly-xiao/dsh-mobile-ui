@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![dsh 0.1.0-rc.6](https://img.shields.io/badge/dsh-0.1.0--rc.6-6c5ce7.svg)](#兼容性)
-[![version 1.2.0](https://img.shields.io/badge/version-1.2.0-blue)](./CHANGELOG.md)
+[![version 1.3.0](https://img.shields.io/badge/version-1.3.0-blue)](./CHANGELOG.md)
 
 DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器打开页面即得原生 App
 般的单列对话体验，桌面端布局不受任何影响。零配置、零依赖、纯客户端注入。
@@ -56,6 +56,9 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
 - **消息时间行** —— "时间 · 用时 · 首 token · 速率"整行收纳，不再溢出换行
 - **各类标签着色** —— 工具标签、上下文注入标签等 6 处恢复语义配色
 - **弹层居中** —— 定时任务等 flyout 菜单在窄屏居中弹出
+- **插件市场适配** —— dshmarket 五个标签页收进单列：标签条横滑、搜索框占满、
+  横幅按钮换行、卡片网格自适应窄容器、已装行来源/按钮换行、备份核对行堆叠、
+  安装/卸载弹窗近全屏且高度按视口封顶
 
 ## 安装
 
