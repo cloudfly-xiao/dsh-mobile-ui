@@ -151,8 +151,9 @@ node tests/run-tests.cjs
 #   DSH_BASE_URL   指向运行中的 dsh web（如 http://127.0.0.1:3080）启用运行时检查
 ```
 
-49 项静态检查（DSH_BASE_URL 指向运行中的 dsh web 再加 3 项运行时检查）：包形状、
-client bundle 可执行性、CSS 完整性、hash 存活性、DOM 钩子、死选择器防回潮。
+56 项静态检查（DSH_BASE_URL 指向运行中的 dsh web 再加 4 项运行时检查，含线上副本
+新鲜度守卫）：包形状、client bundle 可执行性、CSS 完整性、hash 存活性、DOM 钩子、
+死选择器/:has 回潮防护、color-mix 兜底配对。
 
 ## 已知坑（给想写同类插件的人）
 
