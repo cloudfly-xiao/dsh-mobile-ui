@@ -66,12 +66,7 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
 
 **方式一 · 插件控制台（推荐）**：在 DSH Web 的插件控制台中按 GitHub 源安装本仓库。
 
-**方式二 · 手动安装**：
-
-```sh
-cd ~/.dsh/profiles/web
-pnpm add github:cloudfly-xiao/dsh-mobile-ui
-```
+**方式二 · 手动安装**：克隆本仓库到本地，`~/.dsh/profiles/web/package.json` 的 dependencies 增加 `"dsh-mobile-ui": "file:<克隆路径>"`，并在 `node_modules/` 下建立对应符号链接。
 
 在 `cordis.patch.yml` 挂载：
 
