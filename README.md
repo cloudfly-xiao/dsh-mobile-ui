@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![dsh 0.1.0-rc.6](https://img.shields.io/badge/dsh-0.1.0--rc.6-6c5ce7.svg)](#兼容性)
-[![version 1.3.0](https://img.shields.io/badge/version-1.3.0-blue)](./CHANGELOG.md)
+[![version 1.4.0](https://img.shields.io/badge/version-1.4.0-blue)](./CHANGELOG.md)
 
 DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器打开页面即得原生 App
 般的单列对话体验，桌面端布局不受任何影响。零配置、零依赖、纯客户端注入。
@@ -42,6 +42,8 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
 - **滚动锁定** —— 抽屉打开时背景页面不再跟着滚（`overflow:hidden` +
   `overscroll-behavior:contain` 防滚动穿透）
 - **拖拽手柄隐藏** —— 触屏无处拖的分割条全部隐藏
+- **全局隐藏滚动条** —— 手机层滚动滑轨一律消失（触摸/滚轮滚动不受影响），
+  各滚动面板收回 8-15px 地沟宽度，不再有可误拖的滑块
 
 ### 输入区
 - **防溢出** —— composer 工具行/模型名自动换行收缩，不再一行挤爆

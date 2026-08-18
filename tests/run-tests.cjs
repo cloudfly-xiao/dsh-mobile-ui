@@ -89,6 +89,8 @@ function discoverDshPkgs() {
     ["sidebar content fills drawer", "[data-slot='sidebar']>*{width:100%!important;max-width:100%!important}"],
     ["jobs flyout centered on mobile", ".QsffPG_menu{left:50%!important"],
     ["inputs no-iOS-zoom", "#root input,#root textarea,#root select{font-size:16px}"],
+    ["phone scrollbars hidden globally", "*{scrollbar-width:none!important}"],
+    ["phone scrollbars hidden (webkit kernels)", "*::-webkit-scrollbar{display:none!important"],
     ["market tabs scroll on phone", ".eGUBIq_tabs{overflow-x:auto!important"],
     ["market search fills row", ".eGUBIq_tabSearch{width:100%!important}"],
     ["market grids clamp 280px floor", ".eGUBIq_grid{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))!important"],
@@ -145,8 +147,8 @@ function discoverDshPkgs() {
     t("mobile-ui client.js served 200", cj.code === 200, "got " + cj.code);
     if (cj.code === 200) t("served bundle is our ModuleLoader code",
       cj.body.startsWith("window.__ModuleLoader__.load({") && cj.body.includes('"dsh-mobile-ui"'));
-    if (cj.code === 200) t("served bundle is current (v1.3 markers)",
-      cj.body.includes("data-dshm-col") && cj.body.includes("interactive-widget=resizes-content") && cj.body.includes("eGUBIq_tabs"),
+    if (cj.code === 200) t("served bundle is current (v1.4 markers)",
+      cj.body.includes("data-dshm-col") && cj.body.includes("interactive-widget=resizes-content") && cj.body.includes("eGUBIq_tabs") && cj.body.includes("scrollbar-width:none!important"),
       "stale install in ~/.dsh/profiles/web — re-copy lib/ and restart");
     const mk = await get(BASE + "/plugins/dshmarket/client.js");
     t("dshmarket client.js served 200", mk.code === 200, "got " + mk.code);

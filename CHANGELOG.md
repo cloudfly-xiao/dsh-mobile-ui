@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0
+
+手机层全局隐藏滚动条。
+
+- **全局去滚动条**：820px 断点下 `*` 一律 `scrollbar-width:none`（标准属性，
+  Firefox / Chrome 121+ / Safari 18.2+）+ `*::-webkit-scrollbar{display:none}`
+  （老微信 XWeb 等内核兜底），`!important` 压过插件自设的
+  `scrollbar-width:thin`（如 dshmarket 截图条）。只隐藏视觉滑轨——触摸/滚轮
+  滚动行为完全不变；桌面端 ≥821px 不受影响。
+- 桌面滚动条在手机上既无用又占 8-15px 地沟宽度，还易被误认为可拖拽元素；
+  会话列表/对话流/设置弹窗/市场页统一清爽。
+- 清理：`.pbvGtq_tabs` 与 `.eGUBIq_tabs` 各自的 scrollbar-width/
+  ::-webkit-scrollbar 声明并入全局规则，删除冗余。
+
 ## 1.3.0
 
 新增 dshmarket（DSH 插件市场）页面的手机适配。市场渲染在设置对话框内，桌面布局
