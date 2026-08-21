@@ -107,6 +107,8 @@ function discoverDshPkgs() {
     css.includes(">[data-dshm-col='sidebar']{transform:none}") && css.includes(">[data-dshm-col='details']{transform:none}"));
   t("embedded overlay hides FAB (column stays below portaled selects)",
     css.includes("body[data-mob-embed-overlay='1'] #dshm-fab-sidebar{display:none!important}"));
+  t("settings nav tabs wrap 2 rows",
+    css.includes(".VOzbGW_navList{flex:1 1 100%!important;flex-direction:row!important;flex-wrap:wrap") && css.includes(".VOzbGW_navCell{flex:1 1 40%!important"));
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
