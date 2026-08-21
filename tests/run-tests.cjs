@@ -115,6 +115,8 @@ function discoverDshPkgs() {
     css.includes(".VOzbGW_overlay{padding:0!important;align-items:flex-end!important}") && css.includes("dshm-sheet-up"));
   t("settings sheet: X hidden + mask-tap close wired",
     css.includes(".VOzbGW_close{display:none!important}") && body.includes(".VOzbGW_mask"));
+  t("settings section header band removed (tabs meet content)",
+    css.includes(".VOzbGW_header{display:none!important}") && css.includes(".VOzbGW_options{padding:6px 14px 14px"));
   t("header chips spread space-evenly uniform gaps (wrappers flattened)",
     css.includes(".wSkVaW_titleRow{justify-content:space-evenly!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
   t("header utilities copy tweak wired (Session log -> Log)",
