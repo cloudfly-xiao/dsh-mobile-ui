@@ -110,13 +110,13 @@ function discoverDshPkgs() {
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("conversation header: only crumbs hidden, actions slot alive",
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
-  t("header chips spread space-between (wrappers flattened)",
-    css.includes(".wSkVaW_titleRow{justify-content:space-between!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
+  t("header chips spread space-evenly uniform gaps (wrappers flattened)",
+    css.includes(".wSkVaW_titleRow{justify-content:space-evenly!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
   t("header utilities copy tweak wired (Session log -> Log)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
   t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
   t("right toggle cluster matches FAB spec + header reserves both corners",
-    css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 54px) 0 54px!important}"));
+    css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 48px) 0 calc(env(safe-area-inset-left,0px) + 48px)!important}"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));

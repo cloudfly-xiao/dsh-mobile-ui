@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.17
+
+头部五元素完全等距：padding 两侧 48px（内容盒恰为两角标内缘之间，1.4.16 实测
+集群为单按钮 40px@right:8），行内改 `space-evenly`——☰/梁神模式/1个子代理/Log/
+右图标 之间所有间距恒等（icon↔chip == chip↔chip）。
+
 ## 1.4.15
 
 修正 1.4.12/14 的右侧让位从未生效：原来门在 `body[data-dsh-sidebar-collapsed]`，
