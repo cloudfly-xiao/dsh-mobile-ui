@@ -123,6 +123,8 @@ function discoverDshPkgs() {
     body.includes('n.nodeValue === "Session log"') && body.includes('log\\u2193') &&
     css.includes(".nL4_yW_sessionLogButton svg{display:none!important}") &&
     css.includes("filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))"));
+  t("header trio text tone unified",
+    css.includes(".SVAs4q_label,.h8S2Va_trigger,.nL4_yW_sessionLogButton{color:var(--dsw-alias-label-secondary)!important}"));
   t("session log capsule width floor dropped", css.includes("min-width:0!important;padding:0 2px!important"));
   t("right toggle cluster matches FAB spec + header reserves both corners",
     css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 48px) 0 calc(env(safe-area-inset-left,0px) + 48px)!important}"));

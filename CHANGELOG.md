@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.26
+
+头部三件套文字颜色统一：预设(secondary)/子代理(tertiary)/log(primary) 原本三档，
+现统一为 `--dsw-alias-label-secondary`。
+
 ## 1.4.25
 
 按用户定稿：Log 按钮回归**纯文本 `log↓`**——去掉自绘 SVG 与定宽盒子，仅保留

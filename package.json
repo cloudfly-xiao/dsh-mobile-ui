@@ -1,7 +1,7 @@
 {
   "name": "dsh-mobile-ui",
   "description": "DSH Web GUI 移动端适配插件：单列布局 + 抽屉导航 + 输入框防溢出 + 统计胶囊 + 安全区适配",
-  "version": "1.4.25",
+  "version": "1.4.26",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
