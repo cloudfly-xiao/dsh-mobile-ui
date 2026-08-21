@@ -108,8 +108,7 @@ function discoverDshPkgs() {
   t("embedded overlay hides FAB (column stays below portaled selects)",
     css.includes("body[data-mob-embed-overlay='1'] #dshm-fab-sidebar{display:none!important}"));
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
-  t("conversation header title row wraps 2 rows",
-    css.includes(".wSkVaW_titleRow{flex-wrap:wrap!important") && css.includes(".wSkVaW_titleCluster{flex:1 1 100%!important}"));
+  t("conversation header title hidden on phones", css.includes(".wSkVaW_titleCluster{display:none!important}"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
