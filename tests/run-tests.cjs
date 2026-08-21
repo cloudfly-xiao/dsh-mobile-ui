@@ -110,6 +110,8 @@ function discoverDshPkgs() {
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("conversation header: only crumbs hidden, actions slot alive",
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
+  t("header chips spread space-between (wrappers flattened)",
+    css.includes(".wSkVaW_titleRow{justify-content:space-between!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
   t("header utilities copy tweak wired (Session log -> Log)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
   t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));

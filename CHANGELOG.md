@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.14
+
+按用户方案重做（1.4.13 样式统一已 revert，芯片保持官方原皮肤）：头部左右
+padding 给两个角标让位（左 54px FAB / 右 104px 集群，沿用既有规则），行内
+`display:contents` 拍平两个槽位包装层，titleRow 改 `space-between`——三件套
+在两角标之间均匀平铺，仅布局调整、零样式改动。
+
+## 1.4.13
+
+（已被 revert）三小件胶囊规格统一。
+
 ## 1.4.12
 
 better-sidebar 右上角集群对齐左侧 FAB：按钮从 28px 圆形改为 40px 圆角方形（同
