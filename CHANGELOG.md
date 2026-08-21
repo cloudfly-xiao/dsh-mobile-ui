@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.15
+
+修正 1.4.12/14 的右侧让位从未生效：原来门在 `body[data-dsh-sidebar-collapsed]`，
+但线上 DOM 该属性不在 body 上——改为**无条件**：头部 padding 左 54px（FAB）/
+右 104px（集群）+ titleRow `space-between`，完全按用户方案。
+
 ## 1.4.14
 
 按用户方案重做（1.4.13 样式统一已 revert，芯片保持官方原皮肤）：头部左右

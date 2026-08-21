@@ -115,8 +115,8 @@ function discoverDshPkgs() {
   t("header utilities copy tweak wired (Session log -> Log)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
   t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
-  t("right toggle cluster matches FAB spec + header yields corner",
-    css.includes(".nArs4W_toggleButton{") && css.includes("body[data-dsh-sidebar-collapsed] .wSkVaW_header{padding-right:calc(env(safe-area-inset-right,0px) + 104px)"));
+  t("right toggle cluster matches FAB spec + header reserves both corners",
+    css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 104px) 0 54px!important}"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
