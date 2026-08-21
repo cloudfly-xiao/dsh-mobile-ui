@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.10
+
+头部文案：工具区里 dsh-session-log-export 的 "Session log" 下载胶囊在手机上太长，
+移动层重写为 "Log"（精确匹配文本节点、幂等，React 重渲染后观察器自动再改回；
+桌面端 ≥821px 不受影响）。
+
 ## 1.4.9
 
 修正 1.4.8 误伤：`headerActions`（会话操作按钮槽）其实渲染在 `titleCluster`

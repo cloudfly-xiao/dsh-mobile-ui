@@ -110,6 +110,8 @@ function discoverDshPkgs() {
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("conversation header: only crumbs hidden, actions slot alive",
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
+  t("header utilities copy tweak wired (Session log -> Log)",
+    body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
