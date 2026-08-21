@@ -119,10 +119,11 @@ function discoverDshPkgs() {
     css.includes(".VOzbGW_header{display:none!important}") && css.includes(".VOzbGW_options{padding:6px 14px 14px"));
   t("header chips spread space-evenly uniform gaps (wrappers flattened)",
     css.includes(".wSkVaW_titleRow{justify-content:space-evenly!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
-  t("log capsule icon-only (custom SVG mask + text cleared)",
+  t("log capsule is a bare icon (no button chrome)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = ""') &&
-    css.includes(".nL4_yW_sessionLogButton::after") && css.includes("stroke='black' stroke-width='2'"));
-  t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
+    css.includes(".nL4_yW_sessionLogButton::after") && css.includes("stroke='black' stroke-width='2'") &&
+    css.includes(".nL4_yW_sessionLogButton:hover,.nL4_yW_sessionLogButton:active{background:transparent!important}"));
+  t("session log capsule width floor dropped", css.includes("min-width:0!important;width:32px!important"));
   t("right toggle cluster matches FAB spec + header reserves both corners",
     css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 48px) 0 calc(env(safe-area-inset-left,0px) + 48px)!important}"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
