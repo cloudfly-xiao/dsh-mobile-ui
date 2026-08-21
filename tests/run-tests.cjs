@@ -122,7 +122,8 @@ function discoverDshPkgs() {
   t("log capsule is a bare icon (no button chrome)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = ""') &&
     css.includes(".nL4_yW_sessionLogButton::after") && css.includes("stroke='black' stroke-width='2'") &&
-    css.includes(".nL4_yW_sessionLogButton:hover,.nL4_yW_sessionLogButton:active{background:transparent!important}"));
+    css.includes(".nL4_yW_sessionLogButton:hover,.nL4_yW_sessionLogButton:active{background:transparent!important}") &&
+    css.includes("filter:drop-shadow(0 1px 2px rgba(0,0,0,.30))"));
   t("session log capsule width floor dropped", css.includes("min-width:0!important;width:32px!important"));
   t("right toggle cluster matches FAB spec + header reserves both corners",
     css.includes(".nArs4W_toggleButton{") && css.includes(".wSkVaW_header{padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 48px) 0 calc(env(safe-area-inset-left,0px) + 48px)!important}"));
