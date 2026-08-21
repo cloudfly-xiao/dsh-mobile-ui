@@ -105,7 +105,8 @@ function discoverDshPkgs() {
   t("no :has() left in CSS (old WeChat XWeb kernels)", !css.includes(":has("));
   t("drawer open kills containing block (settings modal global)",
     css.includes(">[data-dshm-col='sidebar']{transform:none}") && css.includes(">[data-dshm-col='details']{transform:none}"));
-  t("embedded overlay lifts host column z", css.includes("body[data-mob-embed-overlay='1']"));
+  t("embedded overlay hides FAB (column stays below portaled selects)",
+    css.includes("body[data-mob-embed-overlay='1'] #dshm-fab-sidebar{display:none!important}"));
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
