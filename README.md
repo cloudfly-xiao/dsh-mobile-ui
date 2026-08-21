@@ -1,7 +1,7 @@
 # dsh-mobile-ui
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![dsh 0.1.0-rc.6](https://img.shields.io/badge/dsh-0.1.0--rc.6-6c5ce7.svg)](#兼容性)
+[![dsh 0.1.0-rc.8](https://img.shields.io/badge/dsh-0.1.0--rc.8-6c5ce7.svg)](#兼容性)
 [![version 1.4.0](https://img.shields.io/badge/version-1.4.0-blue)](./CHANGELOG.md)
 
 DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器打开页面即得原生 App
@@ -41,6 +41,9 @@ DSH（DeepSeek Harness）Web GUI 的**移动端适配插件**：手机浏览器�
   面板自身的关闭按钮与 Esc 键同步收起
 - **滚动锁定** —— 抽屉打开时背景页面不再跟着滚（`overflow:hidden` +
   `overscroll-behavior:contain` 防滚动穿透）
+- **弹窗全局化** —— 抽屉内弹出的全屏弹窗（如设置）相对视口居中而非被困在
+  抽屉盒内：开启态抽屉用 `transform:none`（不建包含块/层叠上下文），并探测
+  内嵌浮层把宿主列抬到 z:1200
 - **拖拽手柄隐藏** —— 触屏无处拖的分割条全部隐藏
 - **全局隐藏滚动条** —— 手机层滚动滑轨一律消失（触摸/滚轮滚动不受影响），
   各滚动面板收回 8-15px 地沟宽度，不再有可误拖的滑块
@@ -120,7 +123,7 @@ lib/client.js   client 半边（ModuleLoader 自注册格式）
 
 ## 兼容性与 hash 维护
 
-基于 dsh `0.1.0-rc.6` 构建。升级 dsh 后若手机上出现布局回退（输入框挤爆、
+基于 dsh `0.1.0-rc.6` 构建并在 `0.1.0-rc.8` 上复检通过（内容哈希未变，全部钩子存活）。升级 dsh 后若手机上出现布局回退（输入框挤爆、
 统计变灰一行、侧栏变 56px 窄条、点"检查"无反应等），说明 hash 已过期：
 
 ```sh
@@ -149,6 +152,8 @@ node tests/run-tests.cjs
 # 可选环境变量：
 #   DSH_PKGS_DIR   指向 node_modules/@deepseek-ai（默认自动发现 ~/.npm/_npx）
 #   DSH_BASE_URL   指向运行中的 dsh web（如 http://127.0.0.1:3080）启用运行时检查
+#   DSH_PROFILE_DIR 指向 profile node_modules（默认 ~/.dsh/profiles/web/node_modules）
+#                  启用第三方插件钩子（dshmarket/aionui/live-stats）活性检查
 ```
 
 56 项静态检查（DSH_BASE_URL 指向运行中的 dsh web 再加 4 项运行时检查，含线上副本

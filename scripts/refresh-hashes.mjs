@@ -48,17 +48,13 @@ if (!pkgsDir) {
   process.exit(1);
 }
 
-// logical name -> Set(full classes), from every client bundle's class maps
+// logical name -> Set(full classes), harvested from every visible client bundle
 const logicalToClasses = new Map();
-let bundles = "";
+let corpus = "";          // official @deepseek-ai bundles + third-party profile plugins
+let profilePkgs = 0;
 let mapEntries = 0;
-for (const d of fs.readdirSync(pkgsDir)) {
-  if (!d.startsWith("dsh-client-ui-")) continue;
-  const f = path.join(pkgsDir, d, "lib", "client.js");
-  let src;
-  try { src = fs.readFileSync(f, "utf8"); } catch { continue; }
-  bundles += src;
-  for (const m of src.matchAll(/"([A-Za-z][A-Za-z0-9]*)"\s*:\s*"([A-Za-z0-9_-]+_[A-Za-z][A-Za-z0-9]*)"/g)) {
+function harvest(text) {
+  for (const m of text.matchAll(/"([A-Za-z][A-Za-z0-9]*)"\s*:\s*"([A-Za-z0-9_-]+_[A-Za-z][A-Za-z0-9]*)"/g)) {
     const [, logical, full] = m;
     if (!full.endsWith("_" + logical)) continue;
     mapEntries++;
@@ -66,6 +62,33 @@ for (const d of fs.readdirSync(pkgsDir)) {
     logicalToClasses.get(logical).add(full);
   }
 }
+for (const d of fs.readdirSync(pkgsDir)) {
+  if (!d.startsWith("dsh-client-ui-")) continue;
+  try { const s = fs.readFileSync(path.join(pkgsDir, d, "lib", "client.js"), "utf8"); corpus += s; harvest(s); } catch { continue; }
+}
+// Third-party corpus (dshmarket, aionui, live-stats, …). Without it, a dead
+// token whose logical name is unique among @deepseek-ai classes gets CONFIDENTLY
+// cross-mapped onto an unrelated official component (seen in the wild:
+// dshmarket's titleRow -> conversation header's wSkVaW_titleRow). Merged corpora
+// make such tokens ALIVE (correct) or AMBIGUOUS (manual) — never silently wrong.
+const profileDir = process.env.DSH_PROFILE_DIR || path.join(os.homedir(), ".dsh", "profiles", "web", "node_modules");
+try {
+  const grab = (base, name) => {
+    if (name === "dsh-mobile-ui") return; // never harvest our own tokens
+    for (const f of [path.join(base, "client", "client.js"), path.join(base, "lib", "client.js")]) {
+      try { const s = fs.readFileSync(f, "utf8"); corpus += s; harvest(s); profilePkgs++; } catch {}
+    }
+  };
+  for (const ent of fs.readdirSync(profileDir, { withFileTypes: true })) {
+    if (!ent.isDirectory() || ent.name.startsWith("@")) continue;
+    grab(path.join(profileDir, ent.name), ent.name);
+  }
+  for (const scope of fs.readdirSync(profileDir, { withFileTypes: true })) {
+    if (!scope.isDirectory() || !scope.name.startsWith("@")) continue;
+    const base = path.join(profileDir, scope.name);
+    try { for (const n of fs.readdirSync(base)) grab(path.join(base, n), scope.name + "/" + n); } catch {}
+  }
+} catch { /* profile dir is optional */ }
 
 const src = fs.readFileSync(TARGET, "utf8");
 const replacements = [];   // {old, nu, logical}
@@ -80,14 +103,14 @@ for (const m of src.matchAll(/([A-Za-z0-9_-]+?)_([A-Za-z][A-Za-z0-9]*)\b/g)) {
   const logical = m[2];
   if (!logicalToClasses.has(logical)) continue;
   seen.add(oldToken);
-  if (bundles.includes(oldToken)) { alive.add(oldToken); continue; }
-  const candidates = [...logicalToClasses.get(logical)].filter((c) => bundles.includes("." + c) || bundles.includes('"' + c + '"'));
+  if (corpus.includes(oldToken)) { alive.add(oldToken); continue; }
+  const candidates = [...logicalToClasses.get(logical)].filter((c) => corpus.includes("." + c) || corpus.includes('"' + c + '"'));
   if (candidates.length === 1) replacements.push({ old: oldToken, nu: candidates[0], logical });
   else if (candidates.length === 0) vanished.push({ old: oldToken, logical });
   else ambiguous.push({ old: oldToken, logical, candidates });
 }
 
-console.log("dsh bundles: " + pkgsDir);
+console.log("dsh bundles: " + pkgsDir + " (+" + profilePkgs + " third-party bundles from " + profileDir + ")");
 console.log("class-map entries: " + mapEntries + "; hashed tokens in lib/client.js: " + seen.size);
 console.log("");
 console.log("alive (untouched): " + [...alive].sort().join(", ") || "(none)");

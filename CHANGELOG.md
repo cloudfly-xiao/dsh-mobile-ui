@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.4.1
+
+修复：侧栏抽屉内点"设置"，弹窗被困在 340px 抽屉盒里（应相对全屏）。
+
+### 根因（两层困局）
+官方设置弹窗 `.VOzbGW_overlay`（`position:fixed; inset:0; z-index:1000`）**没有走
+portal**，直接内联渲染在侧栏列 DOM 子树里；而抽屉列一直挂着 transform：
+1. transform 祖先是 fixed 后代的**包含块** → `inset:0` 只解析到抽屉盒（340px），
+   弹窗看起来被塞进抽屉；
+2. 抽屉列 `z-index:60` 自成**层叠上下文** → 即使包含块修好，弹窗的 z:1000
+   仍被压在 FAB（z:70）与 portaled 浮层（z:1000/1100）之下。
+
+### 修复
+- 抽屉**开启态**改用 `transform:none`（关态仍 `translateX(±106%)`）：none 不建立
+  包含块/层叠上下文；none ↔ translate 按单位矩阵插值，滑动动画不变。
+- 帧镜像新增内嵌全屏浮层探测（`.VOzbGW_overlay` 出/入抽屉列时置/清
+  `body[data-mob-embed-overlay]`），命中时把宿主列抬到 `z-index:1200`，
+  弹窗回到全局最上层；关闭设置后自动回落。details 抽屉同享两处修复。
+- 测试 +3 项守卫（开启态 transform:none / 内嵌浮层抬升 / JS 探测接线）。
+
+### 随版适配（dsh rc.8 · dshmarket 1.16 · aionui-panel 0.2.7）
+- 官方构建升级到 `0.1.0-rc.8` 后全量复检：client.js 全部 hash token 存活
+  （rc.8 沿用 rc.6 的内容哈希种子），无需刷新。
+- dshmarket 1.12 → 1.16：市场类 `eGUBIq_*` 全部存活（注意其 client 入口已从
+  lib/client.js 移到 client/client.js）；挂宿主 shell Modal 的 4 条安装弹窗规则已死
+  （该组件在 rc.8 shell / dshmarket 1.16 中不再挂载），剪除。
+- aionui-panel 0.2.7：explorer 列改名 `.aionui-panel`、两个拖拽 handle 类已删，
+  相应修剪/跟进攻选择器（`.aionui-preview-col` 存活保留）。
+- `refresh-hashes.mjs` 语料加固：并入 profile 第三方插件语料（`DSH_PROFILE_DIR`，
+  排除自身）。此前只扫 @deepseek-ai，会把第三方 token"自信地"误配到恰好同名的官方类
+  （实测：dshmarket titleRow → 会话头 wSkVaW_titleRow）——本次干跑即被拦；合并语料
+  后此类 token 正确报 ALIVE 或 AMBIGUOUS，绝无静默误替换。
+- 测试新增第三方钩子活性节（扫 profile 语料：eGUBIq/aionui/live-tps）与 shell-Modal
+  死 scope 回潮守卫。
+
 ## 1.4.0
 
 手机层全局隐藏滚动条。

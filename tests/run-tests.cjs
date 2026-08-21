@@ -95,7 +95,7 @@ function discoverDshPkgs() {
     ["market search fills row", ".eGUBIq_tabSearch{width:100%!important}"],
     ["market grids clamp 280px floor", ".eGUBIq_grid{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))!important"],
     ["market installed rows wrap", ".eGUBIq_irow{flex-wrap:wrap!important"],
-    ["market modal near-full-bleed", "._dialog_15u5s_22{width:100%!important"],
+    ["market FAB repositioned", ".eGUBIq_top{right:12px!important"],
   ];
   for (const [n, str] of stable) t("stable hook: " + n, css.includes(str));
   t("dead pc_/upload selectors pruned", !css.includes(".pc_") && !css.includes(".dsh-upload"));
@@ -103,6 +103,10 @@ function discoverDshPkgs() {
   t("details close mirrored + Esc", body.includes(".Y0dWHa_close") && body.includes('"Escape"'));
   t("landscape safe-area left/right covered", css.includes("safe-area-inset-left") && css.includes("safe-area-inset-right"));
   t("no :has() left in CSS (old WeChat XWeb kernels)", !css.includes(":has("));
+  t("drawer open kills containing block (settings modal global)",
+    css.includes(">[data-dshm-col='sidebar']{transform:none}") && css.includes(">[data-dshm-col='details']{transform:none}"));
+  t("embedded overlay lifts host column z", css.includes("body[data-mob-embed-overlay='1']"));
+  t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
@@ -112,6 +116,7 @@ function discoverDshPkgs() {
     mixLines.length > 0 && mixLines.every((l) => l.includes("background:rgba(")),
     mixLines.length + " color-mix lines, " + mixLines.filter((l) => !l.includes("background:rgba(")).length + " without fallback");
   t("hash drift self-check present", body.includes("refresh-hashes.mjs") && body.includes("__dshMobileUi"));
+  t("market modal dead scope pruned", !css.includes("_15u5s_"));
 
   console.log("\n# 4. rc6 hash liveness (against installed dsh bundles)");
   const pkgsDir = discoverDshPkgs();
@@ -136,6 +141,21 @@ function discoverDshPkgs() {
     s("dshmarket scope liveness", "dshmarket not installed in the web profile");
   }
   t("shell.overlay slot used", body.includes('"shell.overlay"'));
+
+  console.log("\n# 5.5 Third-party plugin hooks (profile node_modules)");
+  const profileDir = process.env.DSH_PROFILE_DIR || path.join(os.homedir(), ".dsh", "profiles", "web", "node_modules");
+  let third = "";
+  try {
+    const grab = (base) => { for (const f of [path.join(base, "client", "client.js"), path.join(base, "lib", "client.js")]) { try { third += fs.readFileSync(f, "utf8"); } catch (e) {} } };
+    for (const ent of fs.readdirSync(profileDir, { withFileTypes: true })) {
+      if (!ent.isDirectory() || ent.name.startsWith(".")) continue;
+      const base = path.join(profileDir, ent.name);
+      if (ent.name.startsWith("@")) { try { for (const n of fs.readdirSync(base)) grab(path.join(base, n)); } catch (e) {} }
+      else if (ent.name !== "dsh-mobile-ui") grab(base);
+    }
+  } catch (e) {}
+  if (!third) s("third-party hooks", "profile node_modules not found; set DSH_PROFILE_DIR to enable");
+  else for (const h of ["eGUBIq_tabs", "aionui-preview-col", "data-dsh-live-tps"]) t("third-party hook " + h + " exists", third.includes(h));
 
   console.log("\n# 6. Runtime integration (live server)");
   if (!BASE) {
