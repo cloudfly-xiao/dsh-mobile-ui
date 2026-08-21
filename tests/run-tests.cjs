@@ -110,6 +110,7 @@ function discoverDshPkgs() {
   t("settings overlay watch wired in JS", body.includes(".VOzbGW_overlay"));
   t("conversation header: only crumbs hidden, actions slot alive",
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
+  t("open-config-file action hidden on phones", css.includes(".me01iq_action{display:none!important}"));
   t("header chips spread space-evenly uniform gaps (wrappers flattened)",
     css.includes(".wSkVaW_titleRow{justify-content:space-evenly!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
   t("header utilities copy tweak wired (Session log -> Log)",
@@ -137,7 +138,7 @@ function discoverDshPkgs() {
     // classes also live in non-ui plugins (e.g. nL4_yW_ in dsh-session-log-export)
     const bundles = fs.readdirSync(pkgsDir).filter(d => fs.existsSync(path.join(pkgsDir, d, "lib/client.js")))
       .map(d => { try { return fs.readFileSync(path.join(pkgsDir, d, "lib/client.js"), "utf8"); } catch (e) { return ""; } }).join("");
-    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_"];
+    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_", "me01iq_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
     console.log("\n# 5. JS DOM hooks referenced by client.js");
     for (const h of ["o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
