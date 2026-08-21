@@ -129,7 +129,9 @@ function discoverDshPkgs() {
   if (!pkgsDir) {
     s("hash liveness", "dsh client bundles not found; set DSH_PKGS_DIR to enable");
   } else {
-    const bundles = fs.readdirSync(pkgsDir).filter(d => d.startsWith("dsh-client-ui-"))
+    // corpus: EVERY @deepseek-ai package shipping a client bundle — hashed
+    // classes also live in non-ui plugins (e.g. nL4_yW_ in dsh-session-log-export)
+    const bundles = fs.readdirSync(pkgsDir).filter(d => fs.existsSync(path.join(pkgsDir, d, "lib/client.js")))
       .map(d => { try { return fs.readFileSync(path.join(pkgsDir, d, "lib/client.js"), "utf8"); } catch (e) { return ""; } }).join("");
     const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
