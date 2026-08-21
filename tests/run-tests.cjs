@@ -113,6 +113,8 @@ function discoverDshPkgs() {
   t("header utilities copy tweak wired (Session log -> Log)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
   t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
+  t("right toggle cluster matches FAB spec + header yields corner",
+    css.includes(".nArs4W_toggleButton{") && css.includes("body[data-dsh-sidebar-collapsed] .wSkVaW_header{padding-right:calc(env(safe-area-inset-right,0px) + 104px)"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
@@ -163,7 +165,7 @@ function discoverDshPkgs() {
     }
   } catch (e) {}
   if (!third) s("third-party hooks", "profile node_modules not found; set DSH_PROFILE_DIR to enable");
-  else for (const h of ["eGUBIq_tabs", "aionui-preview-col", "data-dsh-live-tps"]) t("third-party hook " + h + " exists", third.includes(h));
+  else for (const h of ["eGUBIq_tabs", "aionui-preview-col", "data-dsh-live-tps", "nArs4W_toggleCluster"]) t("third-party hook " + h + " exists", third.includes(h));
 
   console.log("\n# 6. Runtime integration (live server)");
   if (!BASE) {
