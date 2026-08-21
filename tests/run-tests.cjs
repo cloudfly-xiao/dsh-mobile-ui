@@ -115,6 +115,8 @@ function discoverDshPkgs() {
   t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
   t("right toggle cluster matches FAB spec + header yields corner",
     css.includes(".nArs4W_toggleButton{") && css.includes("body[data-dsh-sidebar-collapsed] .wSkVaW_header{padding-right:calc(env(safe-area-inset-right,0px) + 104px)"));
+  t("header trio unified as capsules",
+    css.includes(".SVAs4q_label,.h8S2Va_trigger,.nL4_yW_sessionLogButton{") && css.includes("border-radius:999px!important"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
@@ -135,7 +137,7 @@ function discoverDshPkgs() {
     // classes also live in non-ui plugins (e.g. nL4_yW_ in dsh-session-log-export)
     const bundles = fs.readdirSync(pkgsDir).filter(d => fs.existsSync(path.join(pkgsDir, d, "lib/client.js")))
       .map(d => { try { return fs.readFileSync(path.join(pkgsDir, d, "lib/client.js"), "utf8"); } catch (e) { return ""; } }).join("");
-    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_"];
+    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_", "SVAs4q_", "h8S2Va_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
     console.log("\n# 5. JS DOM hooks referenced by client.js");
     for (const h of ["o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));
