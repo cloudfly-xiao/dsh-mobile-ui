@@ -111,6 +111,10 @@ function discoverDshPkgs() {
   t("conversation header: only crumbs hidden, actions slot alive",
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
   t("open-config-file action hidden on phones", css.includes(".me01iq_action{display:none!important}"));
+  t("settings dialog is a bottom sheet",
+    css.includes(".VOzbGW_overlay{padding:0!important;align-items:flex-end!important}") && css.includes("dshm-sheet-up"));
+  t("settings sheet: X hidden + mask-tap close wired",
+    css.includes(".VOzbGW_close{display:none!important}") && body.includes(".VOzbGW_mask"));
   t("header chips spread space-evenly uniform gaps (wrappers flattened)",
     css.includes(".wSkVaW_titleRow{justify-content:space-evenly!important}") && css.includes(".wSkVaW_titleCluster,.wSkVaW_headerActions,.wSkVaW_headerUtilities{display:contents!important}"));
   t("header utilities copy tweak wired (Session log -> Log)",
