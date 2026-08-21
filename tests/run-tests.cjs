@@ -112,6 +112,7 @@ function discoverDshPkgs() {
     css.includes(".wSkVaW_crumbs{display:none!important}") && !css.includes("titleCluster{display:none"));
   t("header utilities copy tweak wired (Session log -> Log)",
     body.includes('n.nodeValue === "Session log"') && body.includes('n.nodeValue = "Log"'));
+  t("session log capsule width floor dropped", css.includes(".nL4_yW_sessionLogButton{min-width:0!important"));
   t("scroll lock while drawer open", css.includes("body[data-mob-lock='1']{overflow:hidden}"));
   t("overscroll containment on drawers", (css.match(/overscroll-behavior:contain/g) || []).length >= 2);
   t("reduced-motion respected", css.includes("prefers-reduced-motion:reduce"));
@@ -130,7 +131,7 @@ function discoverDshPkgs() {
   } else {
     const bundles = fs.readdirSync(pkgsDir).filter(d => d.startsWith("dsh-client-ui-"))
       .map(d => { try { return fs.readFileSync(path.join(pkgsDir, d, "lib/client.js"), "utf8"); } catch (e) { return ""; } }).join("");
-    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_"];
+    const prefixes = ["uV2eYG_", "wSkVaW_", "FJxK0a_", "VOzbGW_", "zGbnIq_", "p-xYUq_", "pXSMma_", "Md3f7G_", "Sxvs8a_", "NM4-hq_", "_7KE1Ra_", "qSYn7G_", "At1oFq_", "rtSEdW_", "Y0dWHa_", "QsffPG_", "pbvGtq_", "YyYd_", "nL4_yW_"];
     for (const p of prefixes) t("hash " + p + "* exists in build", bundles.includes("." + p));
     console.log("\n# 5. JS DOM hooks referenced by client.js");
     for (const h of ["o3BgMG_inspectButton", "Y0dWHa_close"]) t("hook ." + h + " exists in build", bundles.includes(h));

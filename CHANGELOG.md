@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.11
+
+Session log 下载胶囊宽度修正：rc6 样式带 `min-width:111px`，光改文案（1.4.10）
+盒子不缩。手机层去掉宽度下限并收紧内距，按钮随内容收缩。
+
 ## 1.4.10
 
 头部文案：工具区里 dsh-session-log-export 的 "Session log" 下载胶囊在手机上太长，
