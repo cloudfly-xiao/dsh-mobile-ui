@@ -196,11 +196,9 @@ window.__ModuleLoader__.load({
   .eGUBIq_top{right:12px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important}
 }
 @media (max-width:640px){
-  /* (1.4.3) dialog breathes: 12px inset from the screen edges instead of the
-     near-full-bleed 6px; panel fills the padded content box */
-  .VOzbGW_overlay{padding:12px!important}
-  .VOzbGW_panel{width:100%!important;max-width:100%!important;height:min(800px,calc(100vh - 24px))!important;border-radius:14px!important;flex-direction:column!important}
-  .VOzbGW_nav{width:100%!important;flex:none!important;flex-direction:row!important;align-items:center;gap:4px!important;padding:8px 10px 6px!important;overflow-x:auto;overflow-y:hidden;border-bottom:1px solid var(--dsw-alias-border-l2)}
+  .VOzbGW_overlay{padding:0!important}
+  .VOzbGW_panel{width:100%!important;max-width:calc(100vw - 12px)!important;height:min(800px,calc(100vh - 12px))!important;border-radius:14px!important;flex-direction:column!important}
+  .VOzbGW_nav{width:100%!important;flex:none!important;flex-direction:row!important;align-items:center;gap:4px!important;padding:6px 6px!important;overflow-x:auto;overflow-y:hidden;border-bottom:1px solid var(--dsw-alias-border-l2)}
   .VOzbGW_navTitle{display:none!important}
   .VOzbGW_navList{flex-direction:row!important;gap:2px!important;flex-wrap:nowrap!important}
   .VOzbGW_navCell{white-space:nowrap!important;height:32px!important;padding:0 12px!important;flex:none!important}
@@ -394,7 +392,7 @@ window.__ModuleLoader__.load({
 			const selfCheck = setTimeout(() => {
 				const anchors = ["uV2eYG_card", "wSkVaW_header", "FJxK0a_root"];
 				const missing = anchors.filter((c) => !document.querySelector("." + c));
-				window.__dshMobileUi = { version: "1.4.3", frameTagged: !!(frameEl && frameEl.querySelector("[data-dshm-col]")), missing };
+				window.__dshMobileUi = { version: "1.4.2", frameTagged: !!(frameEl && frameEl.querySelector("[data-dshm-col]")), missing };
 				if (missing.length === anchors.length)
 					console.warn("[dsh-mobile-ui] no rc6 anchor classes found — the dsh build changed; run scripts/refresh-hashes.mjs and reinstall the plugin");
 			}, 3000);
